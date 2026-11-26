@@ -39,7 +39,7 @@ export interface NpmClient {
 }
 
 const REGISTRY = "https://registry.npmjs.org";
-const USER_AGENT = "paseo-plugins-registry";
+const USER_AGENT = "zentic-plugins-registry";
 
 const RETRY_ATTEMPTS = 4;
 

@@ -96,7 +96,7 @@ function packageFixture(t: TestContext, integrity?: string) {
   const root = mkdtempSync(join(tmpdir(), "npm-artifact-"));
   t.after(() => rmSync(root, { recursive: true, force: true }));
   mkdirSync(join(root, "package"));
-  writeFileSync(join(root, "package/paseo-plugin.json"), '{"id":"example"}');
+  writeFileSync(join(root, "package/zentic-plugin.json"), '{"id":"example"}');
   writeFileSync(join(root, "package/OVERVIEW.md"), "An overview from the package.");
   symlinkSync("/etc/passwd", join(root, "package/link"));
   const archive = execFileSync("tar", ["-czf", "-", "-C", root, "package"]);
@@ -120,7 +120,7 @@ function packageFixture(t: TestContext, integrity?: string) {
 test("package reads share one verified npm tarball, without contacting a CDN", async (t) => {
   const f = packageFixture(t);
   const files = await Promise.all([
-    f.client.file("example", "1.0.0", "paseo-plugin.json"),
+    f.client.file("example", "1.0.0", "zentic-plugin.json"),
     f.client.file("example", "1.0.0", "OVERVIEW.md"),
     f.client.file("example", "1.0.0", "absent.md"),
   ]);
@@ -133,7 +133,7 @@ test("package reads share one verified npm tarball, without contacting a CDN", a
 
 test("package bytes must match npm's SHA-512 before any file is read", async (t) => {
   const f = packageFixture(t, "sha512-wrong");
-  await assert.rejects(f.client.file("example", "1.0.0", "paseo-plugin.json"), /integrity/i);
+  await assert.rejects(f.client.file("example", "1.0.0", "zentic-plugin.json"), /integrity/i);
 });
 
 test("package reads reject traversal and links instead of reading the host filesystem", async (t) => {

@@ -19,7 +19,7 @@ for (const scenario of ["present", "absent", "network"] as const) {
     const previousEnv = keys.map((key) => process.env[key]);
     try {
       run("git", ["init", "-q", repository]);
-      writeFileSync(join(repository, "paseo-plugin.json"), '{"id":"example"}');
+      writeFileSync(join(repository, "zentic-plugin.json"), '{"id":"example"}');
       const pin = (tag: string) => {
         run("git", ["add", "."], { cwd: repository });
         run("git", ["-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", tag], { cwd: repository });

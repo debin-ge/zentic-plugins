@@ -1,9 +1,9 @@
-# Paseo plugin registry protocol v1
+# Zentic plugin registry protocol v1
 
 A registry is a set of static JSON files served over HTTPS. You can run your own,
-public or internal, with any static host: no Paseo infrastructure, database, or
-account service. Each file pins one reviewed artifact, and the Paseo daemon installs
-exactly that artifact when someone runs `paseo plugin add`.
+public or internal, with any static host: no Zentic infrastructure, database, or
+account service. Each file pins one reviewed artifact, and the Zentic daemon installs
+exactly that artifact when someone runs `zentic plugin add`.
 
 ## Serve a registry
 
@@ -11,8 +11,8 @@ Publish one detail document per plugin, and optionally a directory:
 
 | URL | Needed for | Read by |
 | --- | --- | --- |
-| `<base>/plugins/<owner>/<slug>.json` | Installs and updates | The Paseo daemon |
-| `<base>/index.json` | Browsing and search | Directory clients such as [paseo.sh/plugins](https://paseo.sh/plugins) |
+| `<base>/plugins/<owner>/<slug>.json` | Installs and updates | The Zentic daemon |
+| `<base>/index.json` | Browsing and search | Directory clients such as [zentic.sh/plugins](https://zentic.sh/plugins) |
 
 The daemon never reads `index.json`. A registry used only from the CLI needs only
 the detail documents.
@@ -30,7 +30,7 @@ For an install, the daemon reads `id` and `artifact` and ignores every other fie
   "id": "acme/example",
   "artifact": {
     "kind": "git",
-    "remote": "https://github.com/acme/paseo-plugins.git",
+    "remote": "https://github.com/acme/zentic-plugins.git",
     "commit": "0123456789abcdef0123456789abcdef01234567",
     "pluginPath": "plugins/example"
   }
@@ -45,14 +45,14 @@ The host must:
 
 - Serve the documents as `application/json`. The daemon parses the body without
   checking the header.
-- Return 404 for unknown IDs. Paseo reports
+- Return 404 for unknown IDs. Zentic reports
   `Plugin acme/missing was not found in registry plugins.example.com`. Any other
   non-2xx status fails with `Registry plugins.example.com returned 401 for acme/example`.
 - Answer with the document itself, never a redirect. The daemon fetches with
   redirects disabled, so a 301 or 302 fails with
   `Could not reach plugin registry <url>`.
 - Use HTTPS. A per-install host address is always fetched over HTTPS. Plain HTTP
-  works only through `PASEO_PLUGIN_REGISTRY` and is meant for local development.
+  works only through `ZENTIC_PLUGIN_REGISTRY` and is meant for local development.
 - Expect caching to delay new pins. Installs and update checks see a new pin once
   every cache between the daemon and your origin has expired the old document.
 - Allow CORS on `index.json` and the detail documents if a browser reads them from
@@ -62,7 +62,7 @@ The host must:
 
 ### GitHub Pages
 
-1. Create a repository, for example `acme/paseo-registry`, and add the detail
+1. Create a repository, for example `acme/zentic-registry`, and add the detail
    documents under `site/`:
 
    ```text
@@ -103,16 +103,16 @@ The host must:
 4. Check the published document:
 
    ```sh
-   curl -i https://acme.github.io/paseo-registry/plugins/acme/example.json
+   curl -i https://acme.github.io/zentic-registry/plugins/acme/example.json
    ```
 
 The site address decides how people install from it:
 
 | Site | Base | Install with |
 | --- | --- | --- |
-| Project site, `https://acme.github.io/paseo-registry` | Has a path prefix | `PASEO_PLUGIN_REGISTRY=https://acme.github.io/paseo-registry`, then `paseo plugin add acme/example` |
-| User or organization site (repository named `acme.github.io`) | `https://acme.github.io` | `paseo plugin add acme.github.io/acme/example` |
-| Custom domain, `plugins.acme.com` | `https://plugins.acme.com` | `paseo plugin add plugins.acme.com/acme/example` |
+| Project site, `https://acme.github.io/zentic-registry` | Has a path prefix | `ZENTIC_PLUGIN_REGISTRY=https://acme.github.io/zentic-registry`, then `zentic plugin add acme/example` |
+| User or organization site (repository named `acme.github.io`) | `https://acme.github.io` | `zentic plugin add acme.github.io/acme/example` |
+| Custom domain, `plugins.acme.com` | `https://plugins.acme.com` | `zentic plugin add plugins.acme.com/acme/example` |
 
 With a custom domain, GitHub redirects the `github.io` address to that domain, and
 the daemon rejects the redirect. Use the custom domain in every install command.
@@ -128,7 +128,7 @@ the documents to `dist/`, and `.github/workflows/publish.yml` deploys them.
 ### Any static host
 
 Upload the same file tree to any HTTPS host. This nginx server block serves a
-registry from `/srv/paseo-registry` and requires a bearer token for the detail
+registry from `/srv/zentic-registry` and requires a bearer token for the detail
 documents:
 
 ```nginx
@@ -137,7 +137,7 @@ server {
   server_name plugins.example.com;
   ssl_certificate     /etc/ssl/plugins.example.com.crt;
   ssl_certificate_key /etc/ssl/plugins.example.com.key;
-  root /srv/paseo-registry;
+  root /srv/zentic-registry;
   default_type application/json;
   add_header Cache-Control "max-age=60" always;
 
@@ -157,37 +157,37 @@ redirects for these paths at any CDN or proxy in front of the host.
 
 ## Install from your registry
 
-`paseo plugin add` (alias of `paseo plugin install`) sends the source to the daemon,
+`zentic plugin add` (alias of `zentic plugin install`) sends the source to the daemon,
 and the daemon fetches the detail document:
 
 | Command | Daemon fetches |
 | --- | --- |
-| `paseo plugin add acme/example` | `<default base>/plugins/acme/example.json` |
-| `paseo plugin add plugins.example.com/acme/example` | `https://plugins.example.com/plugins/acme/example.json` |
-| `paseo plugin add plugins.example.com:8443/acme/example` | `https://plugins.example.com:8443/plugins/acme/example.json` |
+| `zentic plugin add acme/example` | `<default base>/plugins/acme/example.json` |
+| `zentic plugin add plugins.example.com/acme/example` | `https://plugins.example.com/plugins/acme/example.json` |
+| `zentic plugin add plugins.example.com:8443/acme/example` | `https://plugins.example.com:8443/plugins/acme/example.json` |
 
 The host form always uses HTTPS and the root of the host; it cannot carry a path
 prefix. The first segment counts as a host only when it contains `.` or `:`.
 
-The default base is `https://plugins.paseo.sh`. To make bare `owner/slug` IDs
-resolve against your registry, set `PASEO_PLUGIN_REGISTRY` in the environment of
+The default base is `https://plugins.zentic.sh`. To make bare `owner/slug` IDs
+resolve against your registry, set `ZENTIC_PLUGIN_REGISTRY` in the environment of
 the daemon process and restart the daemon. Setting it in the shell that runs the
 CLI has no effect on a daemon that is already running.
 
 ```sh
-PASEO_PLUGIN_REGISTRY=https://acme.github.io/paseo-registry
+ZENTIC_PLUGIN_REGISTRY=https://acme.github.io/zentic-registry
 ```
 
 This base may include a path prefix and may use `http://` for local development.
-The public registry stays reachable as `paseo plugin add plugins.paseo.sh/owner/slug`.
+The public registry stays reachable as `zentic plugin add plugins.zentic.sh/owner/slug`.
 
 Registry installs use the pinned revision and path. `--ref` and a `:path` suffix
 are rejected; to choose a revision, install from GitHub instead.
 
 ### Private registry credentials
 
-Put the credential in the daemon configuration, `$PASEO_HOME/config.json`
-(`~/.paseo/config.json` by default), keyed by the registry host, and restart the
+Put the credential in the daemon configuration, `$ZENTIC_HOME/config.json`
+(`~/.zentic/config.json` by default), keyed by the registry host, and restart the
 daemon:
 
 ```json
@@ -218,13 +218,13 @@ without a prompt.
 ### Updates
 
 The daemon stores the registry URL and ID with the installation, and update checks
-read that same document, even after `PASEO_PLUGIN_REGISTRY` changes. Use the runtime
-plugin ID shown by `paseo plugin ls`:
+read that same document, even after `ZENTIC_PLUGIN_REGISTRY` changes. Use the runtime
+plugin ID shown by `zentic plugin ls`:
 
 ```sh
-paseo plugin update example --check   # compare the installed revision with the pin
-paseo plugin update example --yes     # install the new pin
-paseo plugin update --all
+zentic plugin update example --check   # compare the installed revision with the pin
+zentic plugin update example --yes     # install the new pin
+zentic plugin update --all
 ```
 
 An update installs only the current pin. `--ref` and `--version` are rejected for
@@ -237,14 +237,14 @@ with `Registry artifact source changed; reinstall to approve the new source`.
 An explicit GitHub source bypasses every registry:
 
 ```sh
-paseo plugin add github:acme/example
-paseo plugin add github:acme/paseo-plugins:plugins/example
-paseo plugin add github:acme/paseo-plugins:plugins/example --ref v1.2.0
+zentic plugin add github:acme/example
+zentic plugin add github:acme/zentic-plugins:plugins/example
+zentic plugin add github:acme/zentic-plugins:plugins/example --ref v1.2.0
 ```
 
 The `:path` suffix is relative to the repository root, with no leading slash.
 `--ref` accepts a branch, tag, or commit. Keep the `github:` prefix: without it,
-`acme/paseo-plugins` is a registry ID.
+`acme/zentic-plugins` is a registry ID.
 
 ## Directory
 
@@ -269,7 +269,7 @@ a directory client is that same entry with `readme` (Markdown).
 {
   "id": "acme/example",
   "name": "Example",
-  "description": "An internal Paseo plugin",
+  "description": "An internal Zentic plugin",
   "categories": ["utils"],
   "author": { "github": "acme", "name": "Acme" },
   "repository": { "url": "https://github.com/acme/example" },
@@ -380,7 +380,7 @@ tarball) requires explicit client support; it is not an npm fallback.
 
 ## Install counts
 
-Installation fetches the detail document with `X-Paseo-Install: 1`. Update checks
+Installation fetches the detail document with `X-Zentic-Install: 1`. Update checks
 fetch the same document without this header. A static host may ignore the header.
 
 A registry may count install-intent resolutions, storing no client identifiers.

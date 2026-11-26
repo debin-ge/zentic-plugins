@@ -36,7 +36,7 @@ for (const { id, reason } of skipped) {
 let installs: Record<string, number> = {};
 try {
   const response = await fetch(
-    process.env.INSTALLS_URL ?? "https://paseo.sh/api/plugins/installs",
+    process.env.INSTALLS_URL ?? "https://zentic.sh/api/plugins/installs",
     { signal: AbortSignal.timeout(10000) },
   );
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -56,7 +56,7 @@ for (const detail of details) {
 const publishedIds = new Set(details.map((detail) => detail.id));
 const index: PublishedIndex = {
   schemaVersion: 1,
-  registry: { name: "Paseo plugins", url: process.env.REGISTRY_URL ?? "https://plugins.paseo.sh" },
+  registry: { name: "Zentic plugins", url: process.env.REGISTRY_URL ?? "https://plugins.zentic.sh" },
   generatedAt: new Date().toISOString(),
   categories,
   featured: featured.filter((id) => publishedIds.has(id)),

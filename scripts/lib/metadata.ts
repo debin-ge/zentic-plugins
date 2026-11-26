@@ -25,14 +25,14 @@ export function resolveMetadata(files: ArtifactFiles, record: PluginRecord, pack
 }
 
 function readMetadata(text: string | null, record: PluginRecord, base: string, packageDescription?: string): PluginMetadata {
-  if (text === null) throw new AuthorError("The package does not contain paseo-plugin.json. Include the manifest and publish a new release.");
+  if (text === null) throw new AuthorError("The package does not contain zentic-plugin.json. Include the manifest and publish a new release.");
   let manifest: Record<string, unknown>;
   try {
     const raw: unknown = JSON.parse(text);
     if (!raw || typeof raw !== "object" || Array.isArray(raw)) throw new Error();
     manifest = raw as Record<string, unknown>;
   } catch {
-    throw new AuthorError("paseo-plugin.json must be a JSON object. Fix the manifest and publish a new release.");
+    throw new AuthorError("zentic-plugin.json must be a JSON object. Fix the manifest and publish a new release.");
   }
   const translations = mergeTranslations(manifest.translations === undefined ? {} : parseTranslations(manifest.translations), record.listing?.translations);
   const name = manifest.name;
@@ -69,7 +69,7 @@ function readMetadata(text: string | null, record: PluginRecord, base: string, p
 }
 
 function invalid(field: string, expected: string): never {
-  throw new AuthorError(`paseo-plugin.json: ${field} must be ${expected}. Fix the field and publish a new release.`);
+  throw new AuthorError(`zentic-plugin.json: ${field} must be ${expected}. Fix the field and publish a new release.`);
 }
 
 function isRelativePath(value: string): boolean {

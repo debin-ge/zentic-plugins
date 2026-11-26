@@ -23,11 +23,11 @@ for (const kind of ["npm", "git"] as const) {
     try {
       run("git", ["init", "-q", directory]);
       mkdirSync(plugin, { recursive: true });
-      writeFileSync(join(plugin, "paseo-plugin.json"), '{"id":"example"}');
+      writeFileSync(join(plugin, "zentic-plugin.json"), '{"id":"example"}');
       writeFileSync(join(plugin, "OVERVIEW.md"), "Author overview");
       writeFileSync(join(plugin, "README.md"), "Wrong README");
       writeFileSync(join(plugin, "readme.md"), "Wrong lowercase README");
-      writeFileSync(join(plugin, "paseo-listing.json"), '{"readme":"README.md"}');
+      writeFileSync(join(plugin, "zentic-listing.json"), '{"readme":"README.md"}');
       writeFileSync(join(directory, "OVERVIEW.md"), "npm install wrong-root");
       process.env.GIT_CONFIG_COUNT = "1";
       process.env.GIT_CONFIG_KEY_0 = `url.file://${directory}.insteadOf`;
@@ -54,8 +54,8 @@ for (const kind of ["npm", "git"] as const) {
         async file(_name, version, path) {
           assert.ok(overviews.has(version));
           // Published README/OVERVIEW content is deliberately different from the repository.
-          return path === "paseo-plugin.json" ? '{"id":"example"}'
-            : path === "paseo-listing.json" ? '{"readme":"README.md"}'
+          return path === "zentic-plugin.json" ? '{"id":"example"}'
+            : path === "zentic-listing.json" ? '{"readme":"README.md"}'
             : overviews.get(version)!;
         },
         async files() { return []; },

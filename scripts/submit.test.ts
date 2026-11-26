@@ -24,17 +24,17 @@ function fixture(t: TestContext, source: string) {
     git(cwd, "config", "user.name", "Test");
     git(cwd, "config", "user.email", "test@example.com");
   }
-  writeFileSync(join(remote, "paseo-plugin.json"), '{"id":"example","name":"Example"}');
+  writeFileSync(join(remote, "zentic-plugin.json"), '{"id":"example","name":"Example"}');
   writeFileSync(join(remote, "OVERVIEW.md"), "A fixture plugin.");
   mkdirSync(join(remote, "plugins/review"), { recursive: true });
-  cpSync(join(remote, "paseo-plugin.json"), join(remote, "plugins/review/paseo-plugin.json"));
+  cpSync(join(remote, "zentic-plugin.json"), join(remote, "plugins/review/zentic-plugin.json"));
   cpSync(join(remote, "OVERVIEW.md"), join(remote, "plugins/review/OVERVIEW.md"));
   git(remote, "add", ".");
   git(remote, "commit", "-qm", "fixture");
   git(remote, "tag", "v1.0.0");
   const record = {
     id: "acme/example",
-    artifact: { kind: "npm", package: "@acme/paseo-example", version: "1.0.0", resolved: "https://registry.npmjs.org/example.tgz", integrity: "sha512-fixture" },
+    artifact: { kind: "npm", package: "@acme/zentic-example", version: "1.0.0", resolved: "https://registry.npmjs.org/example.tgz", integrity: "sha512-fixture" },
     repository: { url: "https://github.com/acme/example" },
     categories: ["utils"], submittedAt: "2026-10-06", publishedAt: "2026-10-06", reviewedAt: "2026-10-06",
   };
@@ -48,7 +48,7 @@ function fixture(t: TestContext, source: string) {
   git(registry, "commit", "-qm", "registry");
   git(registry, "update-ref", "refs/remotes/origin/main", "HEAD");
   const body = readFileSync(new URL("fixtures/submission-issue.md", import.meta.url), "utf8")
-    .replace("@acme/paseo-review", source);
+    .replace("@acme/zentic-review", source);
   const issue = { body, author: { login: "acme" }, title: "Example plugin", state: "OPEN", labels: [{ name: "submission" }] };
   const issueFile = join(root, "issue.json");
   const callsFile = join(root, "calls.jsonl");
@@ -93,7 +93,7 @@ for (const source of [
   "https://github.com/acme/example",
   "https://github.com/acme/example/tree/1234567890123456789012345678901234567890/plugins/review",
   "github:acme/example#v1.0.0",
-  "npm:@acme/paseo-example",
+  "npm:@acme/zentic-example",
 ]) {
   test(`intake opens a review proposal without artifact or ownership gates: ${source}`, (t) => {
     const f = fixture(t, source);

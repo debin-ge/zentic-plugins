@@ -3,14 +3,14 @@ import { test } from "node:test";
 import { parseSubmissionSource } from "./submission-source.ts";
 
 for (const source of [
-  "https://github.com/acme/paseo-review", "https://github.com/acme/paseo-review/",
-  "https://github.com/acme/paseo-review.git", "https://github.com/acme/paseo-review.git/",
-  "github:acme/paseo-review", "git:acme/paseo-review",
-  "git:https://github.com/acme/paseo-review.git", "git://github.com/acme/paseo-review.git",
-  "git:ssh://git@github.com/acme/paseo-review.git", "git@github.com:acme/paseo-review.git",
+  "https://github.com/acme/zentic-review", "https://github.com/acme/zentic-review/",
+  "https://github.com/acme/zentic-review.git", "https://github.com/acme/zentic-review.git/",
+  "github:acme/zentic-review", "git:acme/zentic-review",
+  "git:https://github.com/acme/zentic-review.git", "git://github.com/acme/zentic-review.git",
+  "git:ssh://git@github.com/acme/zentic-review.git", "git@github.com:acme/zentic-review.git",
 ]) {
   test(`Git source: ${source}`, () => {
-    assert.deepEqual(parseSubmissionSource(source), { kind: "git", source: "https://github.com/acme/paseo-review" });
+    assert.deepEqual(parseSubmissionSource(source), { kind: "git", source: "https://github.com/acme/zentic-review" });
   });
 }
 for (const source of [
@@ -24,13 +24,13 @@ for (const source of [
     assert.deepEqual(parseSubmissionSource(source), { kind: "git", source: "https://github.com/acme/monorepo", pluginPath: "plugins/review", ...(source.includes("/tree/") ? { ref: source.split("/tree/")[1].split("/")[0] } : {}) });
   });
 }
-for (const source of ["@acme/paseo-review", "npm:@acme/paseo-review", "https://www.npmjs.com/package/@acme/paseo-review"]) {
+for (const source of ["@acme/zentic-review", "npm:@acme/zentic-review", "https://www.npmjs.com/package/@acme/zentic-review"]) {
   test(`npm source: ${source}`, () => {
-    assert.deepEqual(parseSubmissionSource(source), { kind: "npm", package: "@acme/paseo-review" });
+    assert.deepEqual(parseSubmissionSource(source), { kind: "npm", package: "@acme/zentic-review" });
   });
 }
 test("bare unscoped npm packages", () => {
-  assert.deepEqual(parseSubmissionSource("paseo-review"), { kind: "npm", package: "paseo-review" });
+  assert.deepEqual(parseSubmissionSource("zentic-review"), { kind: "npm", package: "zentic-review" });
 });
 for (const source of ["acme/review", "plugins.example.com/acme/review", "./plugin", "../plugin", "/plugins/review", "~/plugin", "C:\\plugins\\review", "git:file:///plugins/review"]) {
   test(`rejects registry ids and directories: ${source}`, () => {

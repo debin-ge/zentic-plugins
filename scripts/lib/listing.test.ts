@@ -40,7 +40,7 @@ const record: PluginRecord = {
 test("publication preserves author, overview, and review dates", async () => {
   const client: NpmClient = {
     async packument() { return { name: doc.name, "dist-tags": { latest: doc.version }, versions: { [doc.version]: doc }, time: {} }; },
-    async file(_name, _version, path) { return path === "paseo-plugin.json" ? '{"name":"Dracula"}' : null; },
+    async file(_name, _version, path) { return path === "zentic-plugin.json" ? '{"name":"Dracula"}' : null; },
     async files() { return []; },
     async provenance() { return null; },
     async tarball() { throw new Error("Not needed"); },
@@ -58,7 +58,7 @@ test("publication preserves author, overview, and review dates", async () => {
 test("publication keeps the first listing time when a later review updates the plugin", async () => {
   const client: NpmClient = {
     async packument() { return { name: doc.name, "dist-tags": { latest: doc.version }, versions: { [doc.version]: doc }, time: {} }; },
-    async file(_name, _version, path) { return path === "paseo-plugin.json" ? "{}" : null; },
+    async file(_name, _version, path) { return path === "zentic-plugin.json" ? "{}" : null; },
     async files() { return []; },
     async provenance() { return null; },
     async tarball() { throw new Error("Not needed"); },
@@ -88,7 +88,7 @@ test("a tagged monorepo artifact is pinned, validated and built through both sub
     run("git", ["init", "-q", repository]);
     mkdirSync(join(repository, pluginPath), { recursive: true });
     writeFileSync(
-      join(repository, pluginPath, "paseo-plugin.json"),
+      join(repository, pluginPath, "zentic-plugin.json"),
       JSON.stringify({ id: "example", name: "Manifest name", description: "Pinned monorepo example", icon: "assets/icon.png", media: ["assets/demo.mp4", "assets/screen.png"] }),
     );
     mkdirSync(join(repository, pluginPath, "assets"));
@@ -96,7 +96,7 @@ test("a tagged monorepo artifact is pinned, validated and built through both sub
     writeFileSync(join(repository, pluginPath, "OVERVIEW.md"), "Monorepo example overview.\n");
     writeFileSync(join(repository, pluginPath, "README.md"), "Wrong README");
     writeFileSync(
-      join(repository, pluginPath, "paseo-listing.json"),
+      join(repository, pluginPath, "zentic-listing.json"),
       JSON.stringify({ media: [] }),
     );
     writeFileSync(join(repository, "README.md"), "Wrong root README");

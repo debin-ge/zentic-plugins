@@ -18,7 +18,7 @@ export async function readArtifactFiles(
 ): Promise<ArtifactFiles> {
   if (artifact.kind === "git") {
     return withGitArtifact({ artifact }, (directory) => ({
-      manifest: readOptional(directory, "paseo-plugin.json"),
+      manifest: readOptional(directory, "zentic-plugin.json"),
       overview: readOptional(directory, "OVERVIEW.md"),
       ...localizedOverviews(readdirSync(directory), (path) => readOptional(directory, path)),
     }));
@@ -28,7 +28,7 @@ export async function readArtifactFiles(
     throw new Error(`${artifact.package}@${artifact.version} integrity on npm differs from the pinned record`);
   }
   const [manifest, overview] = await Promise.all([
-    client.file(artifact.package, artifact.version, "paseo-plugin.json"),
+    client.file(artifact.package, artifact.version, "zentic-plugin.json"),
     client.file(artifact.package, artifact.version, "OVERVIEW.md"),
   ]);
   const translatedFiles = overviewTranslationFiles(await client.files(artifact.package, artifact.version));

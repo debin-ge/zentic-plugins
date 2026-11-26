@@ -6,14 +6,14 @@ import { parseSubmissionIssue } from "./issue.ts";
 import { parseSubmissionSource } from "./submission-source.ts";
 
 const body = readFileSync(new URL("../fixtures/submission-issue.md", import.meta.url), "utf8");
-const parse = (source: string) => parseSubmissionIssue(body.replace("@acme/paseo-review", source), readCategories());
+const parse = (source: string) => parseSubmissionIssue(body.replace("@acme/zentic-review", source), readCategories());
 
 for (const source of [
-  "@acme/paseo-review", "paseo-review", "npm:@acme/paseo-review",
-  "https://www.npmjs.com/package/@acme/paseo-review",
-  "https://github.com/acme/paseo-review", "https://github.com/acme/paseo-review.git/",
+  "@acme/zentic-review", "zentic-review", "npm:@acme/zentic-review",
+  "https://www.npmjs.com/package/@acme/zentic-review",
+  "https://github.com/acme/zentic-review", "https://github.com/acme/zentic-review.git/",
   "https://github.com/acme/monorepo/tree/main/plugins/review",
-  "github:acme/paseo-review", "git:https://github.com/acme/paseo-review.git",
+  "github:acme/zentic-review", "git:https://github.com/acme/zentic-review.git",
   "acme/monorepo:plugins/review",
 ]) {
   test(`reads Source and categories from GitHub's rendered issue: ${source}`, () => {

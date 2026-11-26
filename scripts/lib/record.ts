@@ -23,7 +23,7 @@ export interface PluginRecord {
   publishedAt: string;
   /** When the pinned version was approved. Updates move it. */
   reviewedAt: string;
-  /** Per-field overrides for metadata from the pinned paseo-plugin.json. */
+  /** Per-field overrides for metadata from the pinned zentic-plugin.json. */
   listing?: PluginListingOverrides;
 }
 

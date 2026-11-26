@@ -19,7 +19,7 @@ function withCheckout<T>(
   artifact: { remote: string; commit: string; pluginPath?: string; tag?: string },
   consume: (directory: string) => T,
 ): T {
-  const directory = mkdtempSync(join(tmpdir(), "paseo-registry-"));
+  const directory = mkdtempSync(join(tmpdir(), "zentic-registry-"));
   try {
     run("git", [
       "clone",
@@ -49,10 +49,10 @@ function withCheckout<T>(
     const plugin = realpathSync(path);
     if (relative(directory, plugin).startsWith(".."))
       throw new AuthorError("The plugin directory points outside the repository. Replace the directory link with the plugin files and publish a new release.");
-    const manifest = readOptional(plugin, "paseo-plugin.json");
-    if (manifest === null) throw new AuthorError("The release does not contain paseo-plugin.json in the plugin directory. Add the manifest and publish a new release, or correct the folder in Source.");
+    const manifest = readOptional(plugin, "zentic-plugin.json");
+    if (manifest === null) throw new AuthorError("The release does not contain zentic-plugin.json in the plugin directory. Add the manifest and publish a new release, or correct the folder in Source.");
     try { JSON.parse(manifest); }
-    catch { throw new AuthorError("paseo-plugin.json is not valid JSON. Fix the file and publish a new release."); }
+    catch { throw new AuthorError("zentic-plugin.json is not valid JSON. Fix the file and publish a new release."); }
     return consume(plugin);
   } finally {
     rmSync(directory, { recursive: true, force: true });

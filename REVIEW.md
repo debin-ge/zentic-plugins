@@ -1,6 +1,6 @@
 # Review policy
 
-The registry helps authors publish useful plugins and helps Paseo users install reviewed
+The registry helps authors publish useful plugins and helps Zentic users install reviewed
 artifacts. Reviewers complete the listing work they can do themselves and check the artifact
 for malicious, deceptive, or seriously unsafe behavior. Ordinary submissions should move
 through to approval once concrete requirements are met.
@@ -134,17 +134,17 @@ These listing-format requirements do not impose a network policy on the plugin's
 
 When no suitable image is available for a visual plugin, explain exactly what the author
 must supply, where it belongs and in what format, linking to the
-[publishing guide's media instructions](https://paseo.sh/docs/plugins/publishing#icons-and-screenshots).
+[publishing guide's media instructions](https://zentic.sh/docs/plugins/publishing#icons-and-screenshots).
 Do not ask the maintainer to select or judge ordinary screenshots.
 
 ## Overview
 
-The overview helps someone decide whether to install the plugin inside Paseo. Installation
+The overview helps someone decide whether to install the plugin inside Zentic. Installation
 is already provided by the listing page. Explain purpose, necessary setup, useful capabilities,
 data access, permissions and meaningful limitations. Setup for accounts, tokens or external
 tools belongs here; commands to install the plugin do not.
 
-Use the author's `OVERVIEW.md` shipped beside `paseo-plugin.json` when present.
+Use the author's `OVERVIEW.md` shipped beside `zentic-plugin.json` when present.
 When it is absent, use `plugins/<owner>/<slug>.md` in the registry. If neither
 exists, write the registry overview using the README and verified review findings.
 Do not copy the README wholesale, invent behavior or require a new plugin release
@@ -169,7 +169,7 @@ does not help someone choose.
 Tell the author when you wrote or edited the registry overview and recommend shipping
 their own in the next release. Explain that it is written for the listing page, where installation
 is already shown. Link to the
-[publishing guide's overview guidance](https://paseo.sh/docs/plugins/publishing#your-listing-page)
+[publishing guide's overview guidance](https://zentic.sh/docs/plugins/publishing#your-listing-page)
 for its format. An imperfect supplied overview is editorial work, not an automatic rejection.
 
 ### Translated listings

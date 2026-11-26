@@ -1,6 +1,6 @@
 ### Source
 
-@acme/paseo-review
+@acme/zentic-review
 
 ### Categories
 

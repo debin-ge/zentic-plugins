@@ -27,8 +27,8 @@ jobs:
         with:
           node-version: 22
       - run: |
-          git config user.name "paseo-plugins[bot]"
-          git config user.email "plugins@paseo.sh"
+          git config user.name "zentic-plugins[bot]"
+          git config user.email "plugins@zentic.sh"
           gh label create bump --color 1D76DB --description "Pinned artifact update" --force
           gh label create needs-maintainer --color D93F0B --description "Requires a maintainer decision" --force
       - name: Review new npm versions (Git updates are manual)

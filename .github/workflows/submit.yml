@@ -38,8 +38,8 @@ jobs:
           node-version: 22
       - name: Configure author and ensure the label exists
         run: |
-          git config user.name "paseo-plugins[bot]"
-          git config user.email "plugins@paseo.sh"
+          git config user.name "zentic-plugins[bot]"
+          git config user.email "plugins@zentic.sh"
           gh label create submission --color 0E8A16 --description "Plugin submission" --force
           gh label create needs-maintainer --color D93F0B --description "Requires a maintainer decision" --force
       - name: Open review PRs for submissions

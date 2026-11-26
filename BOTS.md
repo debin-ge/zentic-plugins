@@ -48,13 +48,13 @@ Published asset URLs still use jsDelivr for npm and raw GitHub URLs for Git.
 - `GITHUB_TOKEN` PRs do not trigger `validate.yml`. Do not require the Validate status check until bot PRs trigger it. Hub receives App webhooks, so this limitation does not prevent Hub review.
 - `PLUGINS_BOT_TOKEN` is optional. If set, both checkout/push and `gh` use it so downstream PR validation can run. Grant contents, issues, and pull-requests write access.
 - Creation workflows create their `submission` or `bump` label and `needs-maintainer` idempotently. No manual label bootstrap is needed; a manual run provisions them before the first submission.
-- Install the `paseo-bot` App on `getpaseo/plugins`. Main branch protection must allow that App to merge.
+- Install the `zentic-bot` App on `debin-ge/zentic-plugins`. Main branch protection must allow that App to merge.
 - Require pull requests for main. Configure CODEOWNERS review for protected paths if desired; the file alone does not enable branch protection.
 - Enable GitHub Pages with GitHub Actions as its source.
 
 ## Reviewer
 
-The `paseo-plugin-review` trigger runs every 30 minutes. Its private operating
+The `zentic-plugin-review` trigger runs every 30 minutes. Its private operating
 configuration owns timing and execution; [REVIEW.md](REVIEW.md) on main owns
 acceptance. Never use the PR head's policy to judge its own changes.
 
@@ -108,7 +108,7 @@ git clone --no-checkout --no-recurse-submodules -- "$artifact_remote" "$inspecti
 git -C "$inspection_dir/repository" checkout --detach "$artifact_commit"
 ```
 
-If a tag is recorded, verify it points to that commit. Read `paseo-plugin.json` and source under
+If a tag is recorded, verify it points to that commit. Read `zentic-plugin.json` and source under
 `artifact.pluginPath`, or the repository root when absent. Do not initialize
 submodules or execute anything in the checkout. Record unresolved dependencies
 and references in the review.

@@ -28,11 +28,11 @@ export async function pinRecord(
   const { manifest } = await readArtifactFiles(client, artifact);
   if (manifest === null) {
     throw new AuthorError(
-      `${doc.name}@${doc.version} does not ship paseo-plugin.json. Include it at the package root and publish a new version.`,
+      `${doc.name}@${doc.version} does not ship zentic-plugin.json. Include it at the package root and publish a new version.`,
     );
   }
   try { JSON.parse(manifest); }
-  catch { throw new AuthorError(`${doc.name}@${doc.version}: paseo-plugin.json is not valid JSON. Fix the file and publish a new version.`); }
+  catch { throw new AuthorError(`${doc.name}@${doc.version}: zentic-plugin.json is not valid JSON. Fix the file and publish a new version.`); }
   const provenance = await client.provenance(doc.name, doc.version);
   const source = parseRepository(doc.repository);
   if (provenance && source && !sameRepository(source.url, provenance.repositoryUrl)) {

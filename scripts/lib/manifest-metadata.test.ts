@@ -18,19 +18,19 @@ function fixture(t: TestContext, kind: "npm" | "git", manifest: unknown, listing
   const pluginPath = kind === "npm" ? "package" : "plugins/example";
   const plugin = join(root, pluginPath);
   mkdirSync(join(plugin, "assets"), { recursive: true });
-  writeFileSync(join(plugin, "paseo-plugin.json"), JSON.stringify(manifest));
+  writeFileSync(join(plugin, "zentic-plugin.json"), JSON.stringify(manifest));
   writeFileSync(join(plugin, "OVERVIEW.md"), "A theme for focused work.");
   for (const [name, body] of Object.entries(overviews)) writeFileSync(join(plugin, name), body);
   writeFileSync(join(root, "outside.md"), "Outside plugin");
   for (const name of links) { rmSync(join(plugin, name), { force: true }); symlinkSync(join(root, "outside.md"), join(plugin, name)); }
   // This obsolete file must never influence the listing.
-  writeFileSync(join(plugin, "paseo-listing.json"), JSON.stringify({ name: "Wrong name", media: ["https://wrong.test/wrong.png"] }));
+  writeFileSync(join(plugin, "zentic-listing.json"), JSON.stringify({ name: "Wrong name", media: ["https://wrong.test/wrong.png"] }));
   for (const path of ["icon.png", "screen shot.PNG", "demo.mp4"]) writeFileSync(join(plugin, "assets", path), "fixture asset");
   const remote = "https://github.com/acme/manifest.git";
   const git = (...args: string[]) => execFileSync("git", args, { cwd: root, encoding: "utf8" }).trim();
   git("init", "-q");
   if (kind === "npm") {
-    writeFileSync(join(plugin, "paseo-plugin.json"), '{"name":"Repository name"}');
+    writeFileSync(join(plugin, "zentic-plugin.json"), '{"name":"Repository name"}');
     writeFileSync(join(plugin, "OVERVIEW.md"), "Repository overview.");
   }
   git("add", ".");
@@ -38,7 +38,7 @@ function fixture(t: TestContext, kind: "npm" | "git", manifest: unknown, listing
   const commit = git("rev-parse", "HEAD");
   for (const name of Object.keys(overviews)) writeFileSync(join(plugin, name), "Unreviewed translation");
   // HEAD is deliberately different from the pinned manifest and assets.
-  writeFileSync(join(plugin, "paseo-plugin.json"), '{"name":"Unreleased"}');
+  writeFileSync(join(plugin, "zentic-plugin.json"), '{"name":"Unreleased"}');
   git("add", ".");
   git("-c", "user.name=Test", "-c", "user.email=test@example.com", "commit", "-qm", "unreleased");
   const keys = ["GIT_CONFIG_COUNT", "GIT_CONFIG_KEY_0", "GIT_CONFIG_VALUE_0"];
@@ -49,7 +49,7 @@ function fixture(t: TestContext, kind: "npm" | "git", manifest: unknown, listing
   t.after(() => keys.forEach((key, i) => {
     if (previous[i] === undefined) delete process.env[key]; else process.env[key] = previous[i];
   }));
-  writeFileSync(join(plugin, "paseo-plugin.json"), JSON.stringify(manifest));
+  writeFileSync(join(plugin, "zentic-plugin.json"), JSON.stringify(manifest));
   writeFileSync(join(plugin, "OVERVIEW.md"), "A theme for focused work.");
   for (const [name, body] of Object.entries(overviews)) writeFileSync(join(plugin, name), body);
   const archive = execFileSync("tar", ["-czf", "-", "-C", root, pluginPath]);

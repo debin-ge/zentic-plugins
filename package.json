@@ -1,7 +1,7 @@
 {
-  "name": "@getpaseo/plugins",
+  "name": "@getzentic/plugins",
   "private": true,
-  "description": "The Paseo plugin registry: reviewed, pinned community plugins published to paseo.sh/plugins.",
+  "description": "The Zentic plugin registry: reviewed, pinned community plugins published to zentic.sh/plugins.",
   "type": "module",
   "license": "MIT",
   "engines": {

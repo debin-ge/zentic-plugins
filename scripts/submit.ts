@@ -39,7 +39,7 @@ try {
     const result = ghJson<{ data: { repository: { issue: {
       lastEditedAt: string | null;
       comments: { nodes: Array<{ createdAt: string; author: { __typename: string } | null }> };
-    } } } }>(["api", "graphql", "-F", `number=${issueNumber}`, "-f", `query=query($number:Int!){repository(owner:"getpaseo",name:"plugins"){issue(number:$number){lastEditedAt comments(last:100){nodes{createdAt author{__typename}}}}}}`]);
+    } } } }>(["api", "graphql", "-F", `number=${issueNumber}`, "-f", `query=query($number:Int!){repository(owner:"debin-ge",name:"zentic-plugins"){issue(number:$number){lastEditedAt comments(last:100){nodes{createdAt author{__typename}}}}}}`]);
     const activity = result.data.repository.issue;
     const dates = [activity.lastEditedAt, ...activity.comments.nodes
       .filter(c => c.author?.__typename === "User").map(c => c.createdAt)];

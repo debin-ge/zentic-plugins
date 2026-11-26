@@ -22,7 +22,7 @@ function fixture(t: TestContext, path = "") {
   git("config", "user.email", "test@example.com");
   const plugin = join(remote, path);
   mkdirSync(plugin, { recursive: true });
-  writeFileSync(join(plugin, "paseo-plugin.json"), '{"id":"example","name":"Example","description":"Fixture"}');
+  writeFileSync(join(plugin, "zentic-plugin.json"), '{"id":"example","name":"Example","description":"Fixture"}');
   writeFileSync(join(plugin, "OVERVIEW.md"), "A fixture plugin.");
   // If artifact code is ever executed, the test leaves an observable failure.
   writeFileSync(join(plugin, "index.js"), 'throw new Error("Plugin code must never execute");');
@@ -126,7 +126,7 @@ test("commit pins require a manifest at the declared plugin path", (t) => {
   const wrongPath = f.cli("add", "https://github.com/acme/fixture", "--categories", "utils", "--commit", f.commit, "--plugin-path", "plugins/missing");
   assert.notEqual(wrongPath.status, 0);
   assert.equal(existsSync(f.recordPath), false);
-  rmSync(join(f.plugin, "paseo-plugin.json"));
+  rmSync(join(f.plugin, "zentic-plugin.json"));
   f.git("add", ".");
   f.git("commit", "-qm", "missing manifest");
   assert.notEqual(f.add("--commit", f.git("rev-parse", "HEAD")).status, 0);
@@ -248,7 +248,7 @@ test("build publishes the other plugins when one pinned source cannot be fetched
 
 test("localized Git build preserves v1 defaults and selects changes to reviewer translations", (t) => {
   const f = fixture(t, "plugins/example");
-  writeFileSync(join(f.plugin, "paseo-plugin.json"), JSON.stringify({
+  writeFileSync(join(f.plugin, "zentic-plugin.json"), JSON.stringify({
     name: "Example", description: "English description",
     translations: { "zh-CN": { name: "示例", description: "中文描述" } },
   }));

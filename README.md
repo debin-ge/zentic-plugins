@@ -1,6 +1,6 @@
-# Paseo plugins
+# Zentic plugins
 
-The reviewed plugin registry behind [paseo.sh/plugins](https://paseo.sh/plugins).
+The reviewed plugin registry behind [zentic.sh/plugins](https://zentic.sh/plugins).
 Each record pins an npm artifact or a Git commit. Merge approves that exact artifact.
 
 The [open registry protocol](PROTOCOL.md) is the client contract. Companies can host
@@ -10,7 +10,7 @@ an internal registry by serving the same static JSON documents.
 
 1. Open the submission form and use your plugin's name as the issue title.
 2. In **Source**, paste its GitHub repository or folder URL, npm package page or
-   name, or Git/npm source accepted by `paseo plugin add`, then tick its categories.
+   name, or Git/npm source accepted by `zentic plugin add`, then tick its categories.
    Registry ids and local directories cannot be submitted.
 3. The bot opens a review PR containing your submission. Git tags and commits
    are optional. When supplied, the reviewer uses that reference; otherwise the
@@ -18,7 +18,7 @@ an internal registry by serving the same static JSON documents.
    version, or `latest` when omitted.
 4. The reviewer inspects the artifact under [REVIEW.md](REVIEW.md), completes the
    listing, and tags you in the outcome. Approved listings appear on
-   [paseo.sh/plugins](https://paseo.sh/plugins).
+   [zentic.sh/plugins](https://zentic.sh/plugins).
 
 Intake checks that the source is understandable. Missing categories, overviews,
 screenshots, source provenance, or unrelated registry failures do not prevent a
@@ -38,7 +38,7 @@ See [BOTS.md](BOTS.md) for the workflow and reviewer responsibilities.
 
 ## Remove your listing
 
-Open a [blank issue](https://github.com/getpaseo/plugins/issues/new) naming your
+Open a [blank issue](https://github.com/debin-ge/zentic-plugins/issues/new) naming your
 plugin ID and why you want it removed, or submit a removal PR. For example:
 “Please remove `owner/plugin`, because it is no longer maintained.” Use a blank
 issue rather than the submission form. The reviewer verifies that the request
@@ -72,7 +72,7 @@ that changes `submittedAt` or `publishedAt`. Records written before timestamps c
 The published index combines records with metadata from their pinned manifests. See
 [plugin metadata](#plugin-metadata) for fields and override precedence.
 
-Authors can ship `OVERVIEW.md` beside `paseo-plugin.json` in the submitted artifact.
+Authors can ship `OVERVIEW.md` beside `zentic-plugin.json` in the submitted artifact.
 For npm, include both files at the published package root. The registry reads them
 from the verified tarball at the pinned version; repository metadata and provenance
 are not needed to read package files. For GitHub, include them at the pinned
@@ -90,7 +90,7 @@ A listing also needs a one-sentence description. When the artifact supplies none
 writes one as `listing.description` before approval. When a release supplies the
 author's own description, the bump removes the registry one.
 
-An overview helps someone choose a plugin on its page inside Paseo, where the
+An overview helps someone choose a plugin on its page inside Zentic, where the
 install command is already at the top. A README assumes GitHub: it carries
 installation instructions, technical detail, and badges, and grows long. Many
 are AI-generated and bloated, as seen on paseo.cafe. Write for the person deciding
@@ -133,7 +133,7 @@ overview content automatically; the reviewer uses the README to write a suitable
 
 ## Plugin metadata
 
-Declare your display name, icon, screenshots, and demo videos in `paseo-plugin.json`:
+Declare your display name, icon, screenshots, and demo videos in `zentic-plugin.json`:
 
 ```json
 {
@@ -142,7 +142,7 @@ Declare your display name, icon, screenshots, and demo videos in `paseo-plugin.j
   "description": "A short description of what the plugin does.",
   "icon": "assets/icon.png",
   "media": ["assets/screenshot.png", "https://example.com/demo.mp4"],
-  "requirements": { "paseo": ">=0.11.0" }
+  "requirements": { "zentic": ">=0.11.0" }
 }
 ```
 
@@ -157,7 +157,7 @@ include local asset files in the published package's `files` list.
 The registry reads the manifest from the pinned npm tarball or Git commit.
 Relative assets become URLs pointing to that version, under `pluginPath` for
 Git monorepos. Media keep their declared order; cards use the first image.
-Manifests declaring these fields require Paseo 0.11.0 or later.
+Manifests declaring these fields require Zentic 0.11.0 or later.
 
 The existing record's `listing` values override the manifest **per field**:
 
@@ -172,7 +172,7 @@ An explicit `listing.media: []` replaces all manifest media. The submission
 bot saves the issue title as `listing.name`. Maintainers can keep using the
 same overrides without changing existing records.
 
-The registry does not read `paseo-listing.json`. Move its metadata into the
+The registry does not read `zentic-listing.json`. Move its metadata into the
 manifest when publishing a new release.
 
 Categories describe where a plugin is listed. Selecting **Themes** does not
@@ -182,7 +182,7 @@ what the plugin does, following [the review policy](REVIEW.md#content).
 
 ## Listing translations
 
-Add translated names and descriptions to `paseo-plugin.json`:
+Add translated names and descriptions to `zentic-plugin.json`:
 
 ```json
 {
@@ -240,7 +240,7 @@ must be available on PATH:
 
 ```sh
 npm test
-npm run add -- @acme/paseo-example --categories utils
+npm run add -- @acme/zentic-example --categories utils
 npm run add -- https://github.com/acme/plugins --plugin-path plugins/example --categories utils
 npm run add -- acme/plugins:plugins/example --categories utils
 npm run add -- https://github.com/acme/plugin --commit "$COMMIT" --categories utils
@@ -290,11 +290,11 @@ publish and logged as `Skipped <id>: <reason>`; the other plugins still deploy.
 When no record resolves, the build succeeds and tells the workflow to skip
 upload and deployment, preserving the live directory.
 `REGISTRY_URL` controls the advertised registry base. `INSTALLS_URL` defaults to
-`https://paseo.sh/api/plugins/installs`; an unavailable counter omits `installs`.
+`https://zentic.sh/api/plugins/installs`; an unavailable counter omits `installs`.
 Counts are advisory install requests, including git artifacts. No npm downloads
 are queried.
 
 Workflows create their labels using the default `GITHUB_TOKEN`.
 Submission intake leaves artifact validation to review; npm bumps include validation details. [BOTS.md](BOTS.md) lists repository setup requirements and the
-optional token override. Configure the public `plugins.paseo.sh` Worker route to
+optional token override. Configure the public `plugins.zentic.sh` Worker route to
 front the documents when install counting is wanted.
