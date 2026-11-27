@@ -8,6 +8,7 @@ import { categorySlugs, readCategories } from "./lib/categories.ts";
 import { createNpmClient, resolveVersion } from "./lib/npm.ts";
 import { commitBumpForReview } from "./lib/bump-review.ts";
 import { repinRecord } from "./lib/pin.ts";
+import { AuthorError } from "./lib/problems.ts";
 import {
   type PluginRecord,
   parseRecord,
@@ -31,6 +32,7 @@ const openBranches = dryRun
 
 mkdirSync(join(TMP, "diffs"), { recursive: true });
 let opened = 0;
+let skipped = 0;
 
 for (const record of records) {
   const artifact = record.artifact;
@@ -38,7 +40,17 @@ for (const record of records) {
   const packument = await client.packument(artifact.package);
   const latest = packument["dist-tags"].latest;
   if (latest === artifact.version) continue;
-  const next = await repinRecord(client, record, latest);
+  let next: PluginRecord;
+  try {
+    next = await repinRecord(client, record, latest);
+  } catch (error) {
+    // One author's unusable release must not block every other plugin's bump.
+    // Tooling and network failures are not author errors and still fail the run.
+    if (!(error instanceof AuthorError)) throw error;
+    console.warn(`${process.env.GITHUB_ACTIONS ? "::warning::" : ""}Skipped ${record.id}@${latest}: ${error.message}`);
+    skipped += 1;
+    continue;
+  }
   const diff = await tarballDiff(record, resolveVersion(packument, latest).dist.tarball);
   const branch = `bump/${record.id}-${latest}`;
   if (openBranches.has(branch)) continue;
@@ -74,7 +86,7 @@ for (const record of records) {
   git(["checkout", "main"]);
   opened += 1;
 }
-console.log(`${opened} bump PR(s) opened`);
+console.log(`${opened} bump PR(s) opened, ${skipped} skipped`);
 
 async function tarballDiff(record: PluginRecord, nextTarball: string): Promise<string> {
   if (record.artifact.kind !== "npm") throw new Error("Expected npm artifact");

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import type { NpmClient, VersionDoc } from "./npm.ts";
 import { pinRecord, repinRecord } from "./pin.ts";
+import { AuthorError } from "./problems.ts";
 
 const version = (number: string): VersionDoc => ({
   name: "@acme/zentic-example",
@@ -40,4 +41,16 @@ test("a bump moves the review time and keeps the submission and first listing ti
   assert.equal(bumped.submittedAt, "2026-10-12T09:15:00Z");
   assert.equal(bumped.publishedAt, "2026-10-12T11:42:00Z");
   assert.equal(bumped.reviewedAt, "2026-10-14T05:17:03Z");
+});
+
+test("a release that ships only paseo-plugin.json is an author error, so bump skips it", async () => {
+  const legacy: NpmClient = {
+    ...client,
+    async file(_name, _version, path) { return path === "paseo-plugin.json" ? "{}" : null; },
+  };
+  const listed = await pinRecord(client, { id: "example", package: "@acme/zentic-example", categories: ["utils"] }, { version: "1.0.0" });
+  await assert.rejects(
+    repinRecord(legacy, listed, "1.1.0"),
+    (error: Error) => error instanceof AuthorError && /does not ship zentic-plugin\.json/.test(error.message),
+  );
 });
